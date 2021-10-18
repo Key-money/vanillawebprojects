@@ -1,19 +1,21 @@
 const form = document.getElementById('form');
 const username = document.getElementById('username');
+const firstname = document.getElementById('FirstName');
+const lastname = document.getElementById('LastName');
 const email = document.getElementById('email');
 const password = document.getElementById('password');
 const password2 = document.getElementById('password2');
+const togglepassword = document.querySelector('#togglePassword');
 
-// Show input error message
-function showError(input, message) {
+//show input error message
+function displayError(input, message){
   const formControl = input.parentElement;
   formControl.className = 'form-control error';
   const small = formControl.querySelector('small');
   small.innerText = message;
 }
-
 // Show success outline
-function showSuccess(input) {
+function displaySuccess(input) {
   const formControl = input.parentElement;
   formControl.className = 'form-control success';
 }
@@ -22,21 +24,21 @@ function showSuccess(input) {
 function checkEmail(input) {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   if (re.test(input.value.trim())) {
-    showSuccess(input);
+   displaySuccess(input);
   } else {
-    showError(input, 'Email is not valid');
+    displayError(input, 'Email is not valid');
   }
 }
 
 // Check required fields
-function checkRequired(inputArr) {
+function checkFilled(inputArr) {
   let isRequired = false;
   inputArr.forEach(function(input) {
     if (input.value.trim() === '') {
-      showError(input, `${getFieldName(input)} is required`);
+      displayError(input, `${getFieldName(input)} is required`);
       isRequired = true;
     } else {
-      showSuccess(input);
+      displaySuccess(input);
     }
   });
 
@@ -46,27 +48,32 @@ function checkRequired(inputArr) {
 // Check input length
 function checkLength(input, min, max) {
   if (input.value.length < min) {
-    showError(
+    displayError(
       input,
       `${getFieldName(input)} must be at least ${min} characters`
     );
   } else if (input.value.length > max) {
-    showError(
+    displayError(
       input,
       `${getFieldName(input)} must be less than ${max} characters`
     );
   } else {
-    showSuccess(input);
+   displaySuccess(input);
   }
 }
 
 // Check passwords match
 function checkPasswordsMatch(input1, input2) {
   if (input1.value !== input2.value) {
-    showError(input2, 'Passwords do not match');
+    displayError(input2, 'Passwords do not match');
   }
 }
-
+togglepassword.addEventListener('click', function(e){
+  const type = password.getAttribute('type') === 'password' ? 'text' : 'password' ;
+  password.setAttribute('type', type);
+  //toggle the eye slash icon
+  this.classList.toggle('bi-eye');
+})
 // Get fieldname
 function getFieldName(input) {
   return input.id.charAt(0).toUpperCase() + input.id.slice(1);
@@ -76,7 +83,9 @@ function getFieldName(input) {
 form.addEventListener('submit', function(e) {
   e.preventDefault();
 
-  if(!checkRequired([username, email, password, password2])){
+  if(!checkFilled([firstname, lastname, username, email, password, password2])){
+    checkLength(firstname, 3, 15);
+    checkLength(lastname, 3, 15);
     checkLength(username, 3, 15);
     checkLength(password, 6, 25);
     checkEmail(email);

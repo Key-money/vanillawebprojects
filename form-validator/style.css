@@ -34,7 +34,10 @@ h2 {
 .form {
   padding: 30px 40px;
 }
-
+form i{
+  margin-left: -30px;
+  cursor: pointer;
+}
 .form-control {
   margin-bottom: 10px;
   padding-bottom: 20px;
